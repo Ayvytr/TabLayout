@@ -1,0 +1,3 @@
+rootProject.name='TabLayout'
+include ':app'
+include ':tab-layout'
