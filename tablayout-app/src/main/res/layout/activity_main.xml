@@ -10,19 +10,32 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
     </androidx.viewpager.widget.ViewPager>
 
-    <com.ayvytr.tablayoutapp.TabLayout
-        android:id="@+id/tab_layout"
-        app:tabMode="auto"
-        app:tabTextColor="@color/black"
-        app:tabSelectedTextColor="@color/red"
-        app:tabTextSize="@dimen/_14sp"
-        app:tabSelectedTextSize="@dimen/_18sp"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2"
         android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        app:tabMode="auto"
+        app:tabTextColor="@color/aero"
+        app:tabIndicator="@drawable/ic_indicator"
+        app:tabSelectedTextColor="@color/red"
+        app:tabTextAppearance="@style/TextAppearance"
+        app:tabIndicatorGravity="stretch"
+        app:tabIndicatorColor="@color/red"
+        app:tabMinWidth="@dimen/_100dp"
+        android:layout_height="80dp" />
+<!--    app:tabIndicatorFullWidth="false"-->
+    <!--    app:tabIndicatorColor="@color/red"-->
+
 </LinearLayout>

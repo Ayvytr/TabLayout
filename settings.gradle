@@ -1,3 +1,4 @@
 rootProject.name='TabLayout'
-include ':app'
+include ':tablayout-app'
 include ':tab-layout'
+include ':app'
