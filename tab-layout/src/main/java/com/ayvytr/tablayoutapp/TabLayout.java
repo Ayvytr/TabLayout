@@ -390,7 +390,7 @@ public class TabLayout extends HorizontalScrollView {
     @Nullable
     Drawable tabSelectedIndicator;
 
-    PorterDuff.Mode tabIconTintMode;
+//    PorterDuff.Mode tabIconTintMode;
 
     float tabTextSize;
     float tabSelectedTextSize;
@@ -483,10 +483,12 @@ public class TabLayout extends HorizontalScrollView {
 
         slidingTabIndicator.setSelectedIndicatorHeight(
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabIndicatorHeight, dp2px(2)));
+        slidingTabIndicator.setSelectedIndicatorWidth(
+                a.getDimensionPixelSize(R.styleable.TabLayout_tabIndicatorWidth,
+                        dp2px(MIN_INDICATOR_WIDTH)));
         slidingTabIndicator.setSelectedIndicatorColor(
                 a.getColor(R.styleable.TabLayout_tabIndicatorColor, Color.BLACK));
-//    setSelectedTabIndicator(
-//        MaterialResources.getDrawable(context, a, R.styleable.TabLayout_tabIndicator));
+        setSelectedTabIndicator(a.getDrawable(R.styleable.TabLayout_tabIndicator));
         setSelectedTabIndicatorGravity(
                 a.getInt(R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
         setTabIndicatorFullWidth(a.getBoolean(R.styleable.TabLayout_tabIndicatorFullWidth, true));
@@ -594,12 +596,12 @@ public class TabLayout extends HorizontalScrollView {
 
         // Reading a single color with getColorStateList() on API 15 and below doesn't always correctly
         // read the value. Instead we'll first try to read the color directly here.
-        if(VERSION.SDK_INT <= VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-            int color = attributes.getColor(index, -1);
-            if(color != -1) {
-                return ColorStateList.valueOf(color);
-            }
-        }
+//        if(VERSION.SDK_INT <= VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+//            int color = attributes.getColor(index, -1);
+//            if(color != -1) {
+//                return ColorStateList.valueOf(color);
+//            }
+//        }
 
         return attributes.getColorStateList(index);
     }
@@ -2379,10 +2381,10 @@ public class TabLayout extends HorizontalScrollView {
 
             super.setSelected(selected);
 
-            if(changed && selected && VERSION.SDK_INT < 16) {
-                // Pre-JB we need to manually send the TYPE_VIEW_SELECTED event
-                sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
-            }
+//            if(changed && selected && VERSION.SDK_INT < 16) {
+//                // Pre-JB we need to manually send the TYPE_VIEW_SELECTED event
+//                sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
+//            }
 
             // Always dispatch this to the child views, regardless of whether the value has
             // changed
@@ -2886,6 +2888,8 @@ public class TabLayout extends HorizontalScrollView {
 
         private ValueAnimator indicatorAnimator;
 
+        private int selectedIndicatorWidth;
+
         SlidingTabIndicator(Context context) {
             super(context);
             setWillNotDraw(false);
@@ -3146,10 +3150,19 @@ public class TabLayout extends HorizontalScrollView {
             }
 
             int tabViewCenter = (tabView.getLeft() + tabView.getRight()) / 2;
-            int contentLeftBounds = tabViewCenter - (tabViewContentWidth / 2);
-            int contentRightBounds = tabViewCenter + (tabViewContentWidth / 2);
 
-            contentBounds.set(contentLeftBounds, 0, contentRightBounds, 0);
+            if(tabIndicatorFullWidth) {
+                int contentLeftBounds = tabViewCenter - (tabViewContentWidth / 2);
+                int contentRightBounds = tabViewCenter + (tabViewContentWidth / 2);
+                contentBounds.set(contentLeftBounds, 0, contentRightBounds, 0);
+            } else {
+                int width = selectedIndicatorWidth > 0 ? selectedIndicatorWidth : minIndicatorWidth;
+                width /= 2;
+                int contentLeftBounds = tabViewCenter - width;
+                int contentRightBounds = tabViewCenter + width;
+                contentBounds.set(contentLeftBounds, 0, contentRightBounds, 0);
+            }
+
         }
 
         @Override
@@ -3194,7 +3207,7 @@ public class TabLayout extends HorizontalScrollView {
                                 tabSelectedIndicator != null ? tabSelectedIndicator : defaultSelectionIndicator);
                 selectedIndicator
                         .setBounds(indicatorLeft, indicatorTop, indicatorRight, indicatorBottom);
-                if(selectedIndicatorPaint != null) {
+                if(selectedIndicatorPaint != null && tabSelectedIndicator == null) {
                     if(VERSION.SDK_INT == VERSION_CODES.LOLLIPOP) {
                         // Drawable doesn't implement setTint in API 21
                         selectedIndicator.setColorFilter(
@@ -3209,6 +3222,10 @@ public class TabLayout extends HorizontalScrollView {
 
             // Draw the tab item contents (icon and label) on top of the background + indicator layers
             super.draw(canvas);
+        }
+
+        public void setSelectedIndicatorWidth(int indicatorWidth) {
+            this.selectedIndicatorWidth = indicatorWidth;
         }
     }
 

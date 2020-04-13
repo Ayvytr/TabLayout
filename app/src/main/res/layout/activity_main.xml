@@ -23,6 +23,11 @@
         app:tabSelectedTextColor="@color/red"
         app:tabTextSize="@dimen/_14sp"
         app:tabSelectedTextSize="@dimen/_18sp"
+        app:tabIndicatorColor="@color/pink"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="@dimen/_10dp"
+        app:tabIndicatorWidth="@dimen/_20dp"
         android:layout_width="match_parent"
+        app:tabIndicator="@drawable/ic_indicator"
         android:layout_height="60dp"/>
 </LinearLayout>
