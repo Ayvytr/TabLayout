@@ -58,7 +58,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import androidx.annotation.BoolRes;
 import androidx.annotation.ColorInt;
@@ -83,6 +85,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
@@ -434,6 +437,8 @@ public class TabLayout extends HorizontalScrollView {
     private TabLayoutOnPageChangeListener pageChangeListener;
     private AdapterChangeListener adapterChangeListener;
     private boolean setupViewPagerImplicitly;
+
+    private ViewPager2 viewPager2;
 
     // Pool we use as a simple RecyclerBin
     private final Pools.Pool<TabView> tabViewPool = new Pools.SimplePool<>(12);
@@ -3429,4 +3434,35 @@ public class TabLayout extends HorizontalScrollView {
             this.autoRefresh = autoRefresh;
         }
     }
+
+    private TabLayoutMediator mediator;
+
+    public void bindViewPager2(ViewPager2 viewPager2, CharSequence[] titles) {
+        bindViewPager2(viewPager2, Arrays.asList(titles));
+    }
+
+    public void unbindViewPager2() {
+        releaseTabLayoutMediator();
+    }
+
+    public void bindViewPager2(@NonNull ViewPager2 viewPager2, @NonNull final List<CharSequence> titles) {
+        releaseTabLayoutMediator();
+
+        mediator = new TabLayoutMediator(this, viewPager2,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull Tab tab, int position) {
+                        tab.setText(titles.get(position));
+                    }
+                });
+        mediator.attach();
+    }
+
+    private void releaseTabLayoutMediator() {
+        if(mediator != null) {
+            mediator.detach();
+            mediator = null;
+        }
+    }
+
 }

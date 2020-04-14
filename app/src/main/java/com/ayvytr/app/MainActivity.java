@@ -8,10 +8,9 @@ import com.ayvytr.app.fragments.Fragment2;
 import com.ayvytr.app.fragments.Fragment3;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,24 +34,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        binding.vp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+//        binding.vp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+//            @NonNull
+//            @Override
+//            public Fragment getItem(int position) {
+//                return fragments[position];
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return fragments.length;
+//            }
+//
+//            @Nullable
+//            @Override
+//            public CharSequence getPageTitle(int position) {
+//                return titles[position];
+//            }
+//        });
+//        binding.tabLayout.setupWithViewPager(binding.vp);
+        binding.vp2.setAdapter(new FragmentStateAdapter(this) {
             @NonNull
             @Override
-            public Fragment getItem(int position) {
+            public Fragment createFragment(int position) {
                 return fragments[position];
             }
 
             @Override
-            public int getCount() {
+            public int getItemCount() {
                 return fragments.length;
             }
-
-            @Nullable
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return titles[position];
-            }
         });
-        binding.tabLayout.setupWithViewPager(binding.vp);
+        binding.tabLayout.bindViewPager2(binding.vp2, titles);
     }
 }
