@@ -25,7 +25,7 @@
         <!-- Position in the Y axis from the starting edge that tabs should be positioned from. -->
         <attr name="tabContentStart" format="dimension" />
         <!-- Reference to a background to be applied to tabs. -->
-        <attr name="tabBackground" format="reference" />
+<!--        <attr name="tabItemBackground" format="reference" />-->
         <!-- Reference to a drawable to use as selection indicator for tabs. If this attribute is not
              specified, indicator defaults to a line along the bottom of the tab. -->
         <attr name="tabIndicator" format="reference" />

@@ -37,6 +37,7 @@ import android.os.Build.VERSION_CODES;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -392,12 +393,12 @@ public class TabLayout extends HorizontalScrollView {
 
 //    PorterDuff.Mode tabIconTintMode;
 
-    float tabTextSize;
-    float tabSelectedTextSize;
+    int tabTextSize;
+    int tabSelectedTextSize;
 
-    float tabTextMultiLineSize;
+    int tabTextMultiLineSize = 12;
 
-    final int tabBackgroundResId;
+//    final int tabBackgroundResId;
 
     int tabMaxWidth = Integer.MAX_VALUE;
     private final int requestedTabMinWidth;
@@ -561,7 +562,7 @@ public class TabLayout extends HorizontalScrollView {
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabMinWidth, INVALID_WIDTH);
         requestedTabMaxWidth =
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabMaxWidth, INVALID_WIDTH);
-        tabBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabBackground, 0);
+//        tabBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabItemBackground, 0);
         contentInsetStart = a.getDimensionPixelSize(R.styleable.TabLayout_tabContentStart, 0);
         // noinspection WrongConstant
         mode = a.getInt(R.styleable.TabLayout_tabMode, MODE_FIXED);
@@ -2264,7 +2265,7 @@ public class TabLayout extends HorizontalScrollView {
         @Nullable
         private Drawable baseBackgroundDrawable;
 
-        private int defaultMaxLines = 2;
+        private int defaultMaxLines = 1;
 
         public TabView(@NonNull Context context) {
             super(context);
@@ -2390,13 +2391,24 @@ public class TabLayout extends HorizontalScrollView {
             // changed
             if(textView != null) {
                 textView.setSelected(selected);
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        selected ? tabSelectedTextSize : tabTextSize);
+                Log.e("tag", "multiline size=" + tabTextMultiLineSize
+                + "selected size:" + tabSelectedTextSize
+                + "size:" + tabTextSize);
+
+                int curMaxLines = textView.getLineCount();
+                if(curMaxLines > 1) {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, tabTextMultiLineSize);
+                } else {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                            selected ? tabSelectedTextSize : tabTextSize);
+                }
+
                 if(textBoldMode == TEXT_BOLD_NO) {
                     textView.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 } else if(textBoldMode == TEXT_BOLD_SELECTED) {
                     textView.setTypeface(
-                            Typeface.defaultFromStyle(selected ? Typeface.BOLD : Typeface.NORMAL));
+                            Typeface.defaultFromStyle(
+                                    selected ? Typeface.BOLD : Typeface.NORMAL));
                 } else {
                     textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 }
@@ -2462,7 +2474,12 @@ public class TabLayout extends HorizontalScrollView {
                     maxLines = 1;
                 } else if(textView != null && textView.getLineCount() > 1) {
                     // Otherwise when we have text which wraps we reduce the text size
-                    textSize = tabTextMultiLineSize;
+                    int multiLineTextSize = tabTextMultiLineSize;
+                    if(tabSelectedTextSize > tabTextSize) {
+                        double times = (tabSelectedTextSize - tabTextSize + 0.0) / tabTextSize;
+                        multiLineTextSize  = (int) (multiLineTextSize + multiLineTextSize * times);
+                    }
+                    textSize = multiLineTextSize;
                 }
 
 

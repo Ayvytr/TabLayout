@@ -18,10 +18,12 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private Fragment[] fragments = {new Fragment1(), new Fragment2(), new Fragment3(),
-                                    new Fragment1(), new Fragment2(), new Fragment3()};
+//                                    new Fragment1(), new Fragment2(), new Fragment3()
+    };
     private String[] titles = {
-            "fragment 1", "long long long fragment 2", "fragment 3",
-            "f 4", "long long title of fragment 5", "fragment fff 6"
+            "f1", "long fragment 2", "f 3",
+            "fragment 1", "long long fragment 2", "fragment 3",
+//            "f 4", "long long title of fragment 5", "fragment fff 6"
     };
 
     @Override
