@@ -37,7 +37,6 @@ import android.os.Build.VERSION_CODES;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -79,7 +78,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pools;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
-import androidx.core.view.PointerIconCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
@@ -238,9 +236,6 @@ public class TabLayout extends HorizontalScrollView {
      */
     public static final int TAB_LABEL_VISIBILITY_LABELED = 1;
 
-    /**
-     * @hide
-     */
     @IntDef(value = {TAB_LABEL_VISIBILITY_UNLABELED, TAB_LABEL_VISIBILITY_LABELED})
     public @interface LabelVisibility {}
 
@@ -401,7 +396,8 @@ public class TabLayout extends HorizontalScrollView {
 
     int tabTextMultiLineSize = 12;
 
-//    final int tabBackgroundResId;
+//    Drawable tabItemBackground;
+    int tabItemBackgroundResId;
 
     int tabMaxWidth = Integer.MAX_VALUE;
     private final int requestedTabMinWidth;
@@ -437,8 +433,6 @@ public class TabLayout extends HorizontalScrollView {
     private TabLayoutOnPageChangeListener pageChangeListener;
     private AdapterChangeListener adapterChangeListener;
     private boolean setupViewPagerImplicitly;
-
-    private ViewPager2 viewPager2;
 
     // Pool we use as a simple RecyclerBin
     private final Pools.Pool<TabView> tabViewPool = new Pools.SimplePool<>(12);
@@ -574,6 +568,13 @@ public class TabLayout extends HorizontalScrollView {
         tabGravity = a.getInt(R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
         inlineLabel = a.getBoolean(R.styleable.TabLayout_tabInlineLabel, false);
 //    unboundedRipple = a.getBoolean(R.styleable.TabLayout_tabUnboundedRipple, false);
+
+        if(a.hasValue(R.styleable.TabLayout_tabItemBackground)) {
+//            tabItemBackground = a.getDrawable(R.styleable.TabLayout_tabItemBackground);
+            tabItemBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabItemBackground, -1);
+//            setBackgroundResource(tabItemBackgroundResId);
+        }
+
         a.recycle();
 
         // TODO add attr for these
@@ -2280,10 +2281,13 @@ public class TabLayout extends HorizontalScrollView {
             setGravity(Gravity.CENTER);
             setOrientation(inlineLabel ? HORIZONTAL : VERTICAL);
             setClickable(true);
-            ViewCompat.setPointerIcon(
-                    this,
-                    PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
+//            ViewCompat.setPointerIcon(
+//                    this,
+//                    PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
             ViewCompat.setAccessibilityDelegate(this, null);
+
+//            setBackground(tabItemBackground);
+            setBackgroundResource(tabItemBackgroundResId);
         }
 
 //        private void updateBackgroundDrawable(Context context) {
@@ -2383,7 +2387,7 @@ public class TabLayout extends HorizontalScrollView {
 
         @Override
         public void setSelected(final boolean selected) {
-            final boolean changed = isSelected() != selected;
+//            final boolean changed = isSelected() != selected;
 
             super.setSelected(selected);
 
@@ -2396,9 +2400,6 @@ public class TabLayout extends HorizontalScrollView {
             // changed
             if(textView != null) {
                 textView.setSelected(selected);
-                Log.e("tag", "multiline size=" + tabTextMultiLineSize
-                + "selected size:" + tabSelectedTextSize
-                + "size:" + tabTextSize);
 
                 int curMaxLines = textView.getLineCount();
                 if(curMaxLines > 1) {
@@ -2593,6 +2594,8 @@ public class TabLayout extends HorizontalScrollView {
                 }
                 updateTextAndIcon(this.textView, this.iconView);
 
+//                setBackground(tabItemBackground);
+                setBackgroundResource(tabItemBackgroundResId);
 //        tryUpdateBadgeAnchor();
 //                addOnLayoutChangeListener(iconView);
 //                addOnLayoutChangeListener(textView);

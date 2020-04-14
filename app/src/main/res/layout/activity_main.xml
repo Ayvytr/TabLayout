@@ -36,6 +36,7 @@
         app:tabIndicatorWidth="@dimen/_20dp"
         android:layout_width="match_parent"
         app:tabIndicator="@drawable/ic_indicator"
+        app:tabItemBackground="@drawable/ic_tab_item_bg"
         app:tabGravity="fill"
         android:layout_height="60dp"/>
 </LinearLayout>
