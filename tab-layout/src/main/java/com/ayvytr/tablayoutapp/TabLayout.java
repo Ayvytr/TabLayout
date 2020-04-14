@@ -107,23 +107,6 @@ import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
  * You should add a listener via {@link #addOnTabSelectedListener(OnTabSelectedListener)} to be
  * notified when any tab's selection state has been changed.
  *
- * <p>You can also add items to TabLayout in your layout through the use of {@link TabItem}. An
- * example usage is like so:
- *
- * <pre>
- * &lt;com.google.android.material.tabs.TabLayout
- *         android:layout_height=&quot;wrap_content&quot;
- *         android:layout_width=&quot;match_parent&quot;&gt;
- *
- *     &lt;com.google.android.material.tabs.TabItem
- *             android:text=&quot;@string/tab_text&quot;/&gt;
- *
- *     &lt;com.google.android.material.tabs.TabItem
- *             android:icon=&quot;@drawable/ic_android&quot;/&gt;
- *
- * &lt;/com.google.android.material.tabs.TabLayout&gt;
- * </pre>
- *
  * <h3>ViewPager integration</h3>
  *
  * <p>If you're using a {@link ViewPager} together with this layout, you
@@ -382,21 +365,15 @@ public class TabLayout extends HorizontalScrollView {
     int tabPaddingEnd;
     int tabPaddingBottom;
 
-    //  int tabTextAppearance;
     ColorStateList tabTextColors;
-    //    ColorStateList tabIconTint;
-//    ColorStateList tabRippleColorStateList;
     @Nullable
     Drawable tabSelectedIndicator;
-
-//    PorterDuff.Mode tabIconTintMode;
 
     int tabTextSize;
     int tabSelectedTextSize;
 
     int tabTextMultiLineSize = 12;
 
-//    Drawable tabItemBackground;
     int tabItemBackgroundResId;
 
     int tabMaxWidth = Integer.MAX_VALUE;
@@ -455,31 +432,12 @@ public class TabLayout extends HorizontalScrollView {
 
         // Add the TabStrip
         slidingTabIndicator = new SlidingTabIndicator(context);
-        super.addView(
-                slidingTabIndicator,
-                0,
-                new LayoutParams(
-                        LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        super.addView(slidingTabIndicator, 0,
+                new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
 
         //TODO: defstyle res
         TypedArray a = getContext().obtainStyledAttributes(attrs,
                 R.styleable.TabLayout, defStyleAttr, 0);
-//        ThemeEnforcement.obtainStyledAttributes(
-//            context,
-//            attrs,
-//            R.styleable.TabLayout,
-//            defStyleAttr,
-//            R.style.Widget_Design_TabLayout,
-//            R.styleable.TabLayout_tabTextAppearance);
-
-//    if (getBackground() instanceof ColorDrawable) {
-//      ColorDrawable background = (ColorDrawable) getBackground();
-//      MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable();
-//      materialShapeDrawable.setFillColor(ColorStateList.valueOf(background.getColor()));
-//      materialShapeDrawable.initializeElevationOverlay(context);
-//      materialShapeDrawable.setElevation(ViewCompat.getElevation(this));
-//      ViewCompat.setBackground(this, materialShapeDrawable);
-//    }
 
         slidingTabIndicator.setSelectedIndicatorHeight(
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabIndicatorHeight, dp2px(2)));
@@ -505,27 +463,10 @@ public class TabLayout extends HorizontalScrollView {
         tabPaddingBottom =
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabPaddingBottom, tabPaddingBottom);
 
-//    tabTextAppearance =
-//        a.getResourceId(R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab);
-
-        // Text colors/sizes come from the text appearance first
-//    final TypedArray ta =
-//        context.obtainStyledAttributes(
-//            tabTextAppearance, androidx.appcompat.R.styleable.TextAppearance);
-//    try {
         tabTextSize = a.getDimensionPixelSize(R.styleable.TabLayout_tabTextSize, sp2px(14));
         tabSelectedTextSize = a
-                .getDimensionPixelSize(R.styleable.TabLayout_tabSelectedTextSize,
-                        (int) tabTextSize);
-//      tabTextColors =
-//          getColorStateList(
-//              context,
-//              ta,
-//              androidx.appcompat.R.styleable.TextAppearance_android_textColor);
-//    } finally {
-//      ta.recycle();
-//    }
-//
+                .getDimensionPixelSize(R.styleable.TabLayout_tabSelectedTextSize, tabTextSize);
+
         if(a.hasValue(R.styleable.TabLayout_tabTextColor)) {
             // If we have an explicit text color set, use it instead
             tabTextColors =
@@ -543,44 +484,27 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         textBoldMode = a.getInt(R.styleable.TabLayout_tabTextBoldMode, TEXT_BOLD_NO);
-//    tabIconTint =
-//        MaterialResources.getColorStateList(context, a, R.styleable.TabLayout_tabIconTint);
-//    tabIconTintMode =
-//        ViewUtils.parseTintMode(a.getInt(R.styleable.TabLayout_tabIconTintMode, -1), null);
 
-//    tabRippleColorStateList =
-//        MaterialResources.getColorStateList(context, a, R.styleable.TabLayout_tabRippleColor);
-
-//        {
         tabIndicatorAnimationDuration =
                 a.getInt(R.styleable.TabLayout_tabIndicatorAnimationDuration,
                         ANIMATION_DURATION);
-//        }
 
         requestedTabMinWidth =
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabMinWidth, INVALID_WIDTH);
         requestedTabMaxWidth =
                 a.getDimensionPixelSize(R.styleable.TabLayout_tabMaxWidth, INVALID_WIDTH);
-//        tabBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabItemBackground, 0);
         contentInsetStart = a.getDimensionPixelSize(R.styleable.TabLayout_tabContentStart, 0);
         // noinspection WrongConstant
         mode = a.getInt(R.styleable.TabLayout_tabMode, MODE_FIXED);
         tabGravity = a.getInt(R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
         inlineLabel = a.getBoolean(R.styleable.TabLayout_tabInlineLabel, false);
-//    unboundedRipple = a.getBoolean(R.styleable.TabLayout_tabUnboundedRipple, false);
 
         if(a.hasValue(R.styleable.TabLayout_tabItemBackground)) {
-//            tabItemBackground = a.getDrawable(R.styleable.TabLayout_tabItemBackground);
             tabItemBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabItemBackground, -1);
-//            setBackgroundResource(tabItemBackgroundResId);
         }
 
         a.recycle();
 
-        // TODO add attr for these
-//    final Resources res = getResources();
-//    tabTextMultiLineSize = res.getDimensionPixelSize(R.dimen.design_tab_text_size_2line);
-//    scrollableTabMinWidth = res.getDimensionPixelSize(R.dimen.design_tab_scrollable_min_width);
         tabTextMultiLineSize = sp2px(12);
         scrollableTabMinWidth = dp2px(40);
 
@@ -740,22 +664,6 @@ public class TabLayout extends HorizontalScrollView {
         }
     }
 
-//  private void addTabFromItemView(@NonNull TabItem item) {
-//    final Tab tab = newTab();
-//    if (item.text != null) {
-//      tab.setText(item.text);
-//    }
-//    if (item.icon != null) {
-//      tab.setIcon(item.icon);
-//    }
-//    if (item.customLayout != 0) {
-//      tab.setCustomView(item.customLayout);
-//    }
-//    if (!TextUtils.isEmpty(item.getContentDescription())) {
-//      tab.setContentDescription(item.getContentDescription());
-//    }
-//    addTab(tab);
-//  }
 
     /**
      * @deprecated Use {@link #addOnTabSelectedListener(OnTabSelectedListener)} and {@link
@@ -1121,50 +1029,6 @@ public class TabLayout extends HorizontalScrollView {
     }
 
     /**
-     * Set whether this {@link TabLayout} will have an unbounded ripple effect or if ripple will be
-     * bound to the tab item size.
-     *
-     * <p>Defaults to false.
-     *
-     * @attr ref com.google.android.material.R.styleable#TabLayout_tabUnboundedRipple
-     * @see #hasUnboundedRipple()
-     */
-    public void setUnboundedRipple(boolean unboundedRipple) {
-//        if(this.unboundedRipple != unboundedRipple) {
-//            this.unboundedRipple = unboundedRipple;
-//            for(int i = 0; i < slidingTabIndicator.getChildCount(); i++) {
-//                View child = slidingTabIndicator.getChildAt(i);
-//                if(child instanceof TabView) {
-////                    ((TabView) child).updateBackgroundDrawable(getContext());
-//                }
-//            }
-//        }
-    }
-
-    /**
-     * Set whether this {@link TabLayout} will have an unbounded ripple effect or if ripple will be
-     * bound to the tab item size. Defaults to false.
-     *
-     * @param unboundedRippleResourceId Resource ID for boolean unbounded ripple value
-     * @attr ref com.google.android.material.R.styleable#TabLayout_tabUnboundedRipple
-     * @see #hasUnboundedRipple()
-     */
-    public void setUnboundedRippleResource(@BoolRes int unboundedRippleResourceId) {
-        setUnboundedRipple(getResources().getBoolean(unboundedRippleResourceId));
-    }
-
-    /**
-     * Returns whether this {@link TabLayout} has an unbounded ripple effect, or if ripple is bound to
-     * the tab item size.
-     *
-     * @attr ref com.google.android.material.R.styleable#TabLayout_tabUnboundedRipple
-     * @see #setUnboundedRipple(boolean)
-     */
-    public boolean hasUnboundedRipple() {
-        return unboundedRipple;
-    }
-
-    /**
      * Sets the text colors for the different states (normal, selected) used for the tabs.
      *
      * @see #getTabTextColors()
@@ -1194,82 +1058,6 @@ public class TabLayout extends HorizontalScrollView {
         setTabTextColors(createColorStateList(normalColor, selectedColor));
     }
 
-    /**
-     * Sets the icon tint for the different states (normal, selected) used for the tabs.
-     *
-     * @see #getTabIconTint()
-     */
-//    public void setTabIconTint(@Nullable ColorStateList iconTint) {
-//        if(tabIconTint != iconTint) {
-//            tabIconTint = iconTint;
-//            updateAllTabs();
-//        }
-//    }
-
-//    /**
-//     * Sets the icon tint resource for the different states (normal, selected) used for the tabs.
-//     *
-//     * @param iconTintResourceId A color resource to use as icon tint.
-//     * @see #getTabIconTint()
-//     */
-//    public void setTabIconTintResource(@ColorRes int iconTintResourceId) {
-//        setTabIconTint(AppCompatResources.getColorStateList(getContext(), iconTintResourceId));
-//    }
-
-    /**
-     * Gets the icon tint for the different states (normal, selected) used for the tabs.
-     */
-//    @Nullable
-//    public ColorStateList getTabIconTint() {
-//        return tabIconTint;
-//    }
-
-    /**
-     * Returns the ripple color for this TabLayout.
-     *
-     * @return the color (or ColorStateList) used for the ripple
-     * @see #setTabRippleColor(ColorStateList)
-     */
-//    @Nullable
-//    public ColorStateList getTabRippleColor() {
-//        return tabRippleColorStateList;
-//    }
-
-    /**
-     * Sets the ripple color for this TabLayout.
-     *
-     * <p>When running on devices with KitKat or below, we draw this color as a filled overlay rather
-     * than a ripple.
-     *
-     * @param color color (or ColorStateList) to use for the ripple
-     * @attr ref com.google.android.material.R.styleable#TabLayout_tabRippleColor
-     * @see #getTabRippleColor()
-     */
-//    public void setTabRippleColor(@Nullable ColorStateList color) {
-//        if(tabRippleColorStateList != color) {
-//            tabRippleColorStateList = color;
-//            for(int i = 0; i < slidingTabIndicator.getChildCount(); i++) {
-//                View child = slidingTabIndicator.getChildAt(i);
-//                if(child instanceof TabView) {
-//                    ((TabView) child).updateBackgroundDrawable(getContext());
-//                }
-//            }
-//        }
-//    }
-
-    /**
-     * Sets the ripple color resource for this TabLayout.
-     *
-     * <p>When running on devices with KitKat or below, we draw this color as a filled overlay rather
-     * than a ripple.
-     *
-     * @param tabRippleColorResourceId A color resource to use as ripple color.
-     * @see #getTabRippleColor()
-     */
-//    public void setTabRippleColorResource(@ColorRes int tabRippleColorResourceId) {
-//        setTabRippleColor(
-//                AppCompatResources.getColorStateList(getContext(), tabRippleColorResourceId));
-//    }
 
     /**
      * Returns the selection indicator drawable for this TabLayout.
@@ -1539,34 +1327,6 @@ public class TabLayout extends HorizontalScrollView {
         slidingTabIndicator.addView(tabView, tab.getPosition(), createLayoutParamsForTabs());
     }
 
-//  @Override
-//  public void addView(View child) {
-//    addViewInternal(child);
-//  }
-//
-//  @Override
-//  public void addView(View child, int index) {
-//    addViewInternal(child);
-//  }
-//
-//  @Override
-//  public void addView(View child, ViewGroup.LayoutParams params) {
-//    addViewInternal(child);
-//  }
-//
-//  @Override
-//  public void addView(View child, int index, ViewGroup.LayoutParams params) {
-//    addViewInternal(child);
-//  }
-
-//  private void addViewInternal(final View child) {
-//    if (child instanceof TabItem) {
-//      addTabFromItemView((TabItem) child);
-//    } else {
-//      throw new IllegalArgumentException("Only TabItem instances can be added to TabLayout");
-//    }
-//  }
-
     @NonNull
     private LinearLayout.LayoutParams createLayoutParamsForTabs() {
         final LinearLayout.LayoutParams lp =
@@ -1585,26 +1345,18 @@ public class TabLayout extends HorizontalScrollView {
         }
     }
 
-//  @RequiresApi(VERSION_CODES.LOLLIPOP)
-//  @Override
-//  public void setElevation(float elevation) {
-//    super.setElevation(elevation);
+//    @Override
+//    protected void onDraw(@NonNull Canvas canvas) {
+//        // Draw tab background layer for each tab item
+//        for(int i = 0; i < slidingTabIndicator.getChildCount(); i++) {
+//            View tabView = slidingTabIndicator.getChildAt(i);
+//            if(tabView instanceof TabView) {
+//                ((TabView) tabView).drawBackground(canvas);
+//            }
+//        }
 //
-////    MaterialShapeUtils.setElevation(this, elevation);
-//  }
-
-    @Override
-    protected void onDraw(@NonNull Canvas canvas) {
-        // Draw tab background layer for each tab item
-        for(int i = 0; i < slidingTabIndicator.getChildCount(); i++) {
-            View tabView = slidingTabIndicator.getChildAt(i);
-            if(tabView instanceof TabView) {
-                ((TabView) tabView).drawBackground(canvas);
-            }
-        }
-
-        super.onDraw(canvas);
-    }
+//        super.onDraw(canvas);
+//    }
 
     private int dp2px(int dp) {
         float scale = getResources().getDisplayMetrics().density;
@@ -2039,12 +1791,6 @@ public class TabLayout extends HorizontalScrollView {
                 parent.updateTabViews(true);
             }
             updateView();
-//      if (BadgeUtils.USE_COMPAT_PARENT
-//          && view.hasBadgeDrawable()
-//          && view.badgeDrawable.isVisible()) {
-            // Invalidate the TabView if icon visibility has changed and a badge is displayed.
-//        view.invalidate();
-//      }
             return this;
         }
 
@@ -2097,34 +1843,6 @@ public class TabLayout extends HorizontalScrollView {
             return setText(parent.getResources().getText(resId));
         }
 
-//    /**
-//     * Creates an instance of {@link BadgeDrawable} if none exists. Initializes (if needed) and
-//     * returns the associated instance of {@link BadgeDrawable}.
-//     *
-//     * @return an instance of BadgeDrawable associated with {@code Tab}.
-//     */
-//    @NonNull
-//    public BadgeDrawable getOrCreateBadge() {
-//      return view.getOrCreateBadge();
-//    }
-
-//    /**
-//     * Removes the {@link BadgeDrawable}. Do nothing if none exists. Consider changing the
-//     * visibility of the {@link BadgeDrawable} if you only want to hide it temporarily.
-//     */
-//    public void removeBadge() {
-//      view.removeBadge();
-//    }
-
-//    /**
-//     * Returns an instance of {@link BadgeDrawable} associated with this tab, null if none was
-//     * initialized.
-//     */
-//    @Nullable
-//    public BadgeDrawable getBadge() {
-//      return view.getBadge();
-//    }
-
         /**
          * Sets the visibility mode for the Labels in this Tab. The valid input options are:
          *
@@ -2145,12 +1863,6 @@ public class TabLayout extends HorizontalScrollView {
                 parent.updateTabViews(true);
             }
             this.updateView();
-//      if (BadgeUtils.USE_COMPAT_PARENT
-//          && view.hasBadgeDrawable()
-//          && view.badgeDrawable.isVisible()) {
-//        // Invalidate the TabView if label visibility has changed and a badge is displayed.
-//        view.invalidate();
-//      }
             return this;
         }
 
@@ -2258,9 +1970,6 @@ public class TabLayout extends HorizontalScrollView {
         private Tab tab;
         private TextView textView;
         private ImageView iconView;
-//        @Nullable
-//        private View badgeAnchorView;
-//    @Nullable private BadgeDrawable badgeDrawable;
 
         @Nullable
         private View customView;
@@ -2268,106 +1977,19 @@ public class TabLayout extends HorizontalScrollView {
         private TextView customTextView;
         @Nullable
         private ImageView customIconView;
-        @Nullable
-        private Drawable baseBackgroundDrawable;
 
         private int defaultMaxLines = 1;
 
         public TabView(@NonNull Context context) {
             super(context);
-//            updateBackgroundDrawable(context);
             ViewCompat.setPaddingRelative(
                     this, tabPaddingStart, tabPaddingTop, tabPaddingEnd, tabPaddingBottom);
             setGravity(Gravity.CENTER);
             setOrientation(inlineLabel ? HORIZONTAL : VERTICAL);
             setClickable(true);
-//            ViewCompat.setPointerIcon(
-//                    this,
-//                    PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
             ViewCompat.setAccessibilityDelegate(this, null);
 
-//            setBackground(tabItemBackground);
             setBackgroundResource(tabItemBackgroundResId);
-        }
-
-//        private void updateBackgroundDrawable(Context context) {
-//            if(tabBackgroundResId != 0) {
-//                baseBackgroundDrawable = AppCompatResources
-//                        .getDrawable(context, tabBackgroundResId);
-//                if(baseBackgroundDrawable != null && baseBackgroundDrawable.isStateful()) {
-//                    baseBackgroundDrawable.setState(getDrawableState());
-//                }
-//            } else {
-//                baseBackgroundDrawable = null;
-//            }
-
-//            Drawable background;
-//            Drawable contentDrawable = new GradientDrawable();
-//            ((GradientDrawable) contentDrawable).setColor(Color.TRANSPARENT);
-
-//            if(tabRippleColorStateList != null) {
-//                GradientDrawable maskDrawable = new GradientDrawable();
-            // TODO: Find a workaround for this. Currently on certain devices/versions,
-            // LayerDrawable will draw a black background underneath any layer with a non-opaque color,
-            // (e.g. ripple) unless we set the shape to be something that's not a perfect rectangle.
-//                maskDrawable.setCornerRadius(0.00001F);
-//                maskDrawable.setColor(Color.WHITE);
-
-//        ColorStateList rippleColor =
-//            RippleUtils.convertToRippleDrawableColor(tabRippleColorStateList);
-
-            // TODO: Add support to RippleUtils.compositeRippleColorStateList for different ripple color
-            // for selected items vs non-selected items
-//        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-//          background =
-//              new RippleDrawable(
-//                  rippleColor,
-//                  unboundedRipple ? null : contentDrawable,
-//                  unboundedRipple ? null : maskDrawable);
-//        } else {
-//          Drawable rippleDrawable = DrawableCompat.wrap(maskDrawable);
-//          DrawableCompat.setTintList(rippleDrawable, rippleColor);
-//          background = new LayerDrawable(new Drawable[] {contentDrawable, rippleDrawable});
-//        }
-//      } else {
-//        background = contentDrawable;
-//            }
-//            background = contentDrawable;
-//            ViewCompat.setBackground(this, background);
-//            TabLayout.this.invalidate();
-//        }
-
-        /**
-         * Draw the background drawable specified by tabBackground attribute onto the canvas provided.
-         * This method will draw the background to the full bounds of this TabView. We provide a
-         * separate method for drawing this background rather than just setting this background on the
-         * TabView so that we can control when this background gets drawn. This allows us to draw the
-         * tab background underneath the TabLayout selection indicator, and then draw the TabLayout
-         * content (icons + labels) on top of the selection indicator.
-         *
-         * @param canvas canvas to draw the background on
-         */
-        private void drawBackground(@NonNull Canvas canvas) {
-            if(baseBackgroundDrawable != null) {
-                baseBackgroundDrawable.setBounds(getLeft(), getTop(), getRight(), getBottom());
-                baseBackgroundDrawable.draw(canvas);
-            }
-        }
-
-        @Override
-        protected void drawableStateChanged() {
-            super.drawableStateChanged();
-            boolean changed = false;
-            int[] state = getDrawableState();
-            if(baseBackgroundDrawable != null && baseBackgroundDrawable.isStateful()) {
-                changed |= baseBackgroundDrawable.setState(state);
-            }
-
-            if(changed) {
-                invalidate();
-                TabLayout.this
-                        .invalidate(); // Invalidate TabLayout, which draws mBaseBackgroundDrawable
-            }
         }
 
         @Override
@@ -2441,11 +2063,6 @@ public class TabLayout extends HorizontalScrollView {
             super.onInitializeAccessibilityNodeInfo(info);
             // This view masquerades as an action bar tab.
             info.setClassName(ActionBar.Tab.class.getName());
-//      if (badgeDrawable != null && badgeDrawable.isVisible()) {
-//        CharSequence customContentDescription = getContentDescription();
-//        info.setContentDescription(
-//            customContentDescription + ", " + badgeDrawable.getContentDescription());
-//      }
         }
 
         @Override
@@ -2572,10 +2189,10 @@ public class TabLayout extends HorizontalScrollView {
                 if(this.iconView == null) {
                     inflateAndAddDefaultIconView();
                 }
-                final Drawable icon =
-                        (tab != null && tab.getIcon() != null)
-                                ? DrawableCompat.wrap(tab.getIcon()).mutate()
-                                : null;
+//                final Drawable icon =
+//                        (tab != null && tab.getIcon() != null)
+//                                ? DrawableCompat.wrap(tab.getIcon()).mutate()
+//                                : null;
 //                if(icon != null) {
 //                    DrawableCompat.setTintList(icon, tabIconTint);
 //                    if(tabIconTintMode != null) {
@@ -2588,15 +2205,12 @@ public class TabLayout extends HorizontalScrollView {
                     defaultMaxLines = TextViewCompat.getMaxLines(this.textView);
                 }
 //        TextViewCompat.setTextAppearance(this.textView, tabTextAppearance);
-                //TODO: 文本更新
                 if(tabTextColors != null) {
                     textView.setTextColor(tabTextColors);
                 }
                 updateTextAndIcon(this.textView, this.iconView);
 
-//                setBackground(tabItemBackground);
                 setBackgroundResource(tabItemBackgroundResId);
-//        tryUpdateBadgeAnchor();
 //                addOnLayoutChangeListener(iconView);
 //                addOnLayoutChangeListener(textView);
             } else {
@@ -2631,10 +2245,6 @@ public class TabLayout extends HorizontalScrollView {
 
         private void inflateAndAddDefaultTextView() {
             ViewGroup textViewParent = this;
-//      if (BadgeUtils.USE_COMPAT_PARENT) {
-//        textViewParent = createPreApi18BadgeAnchorRoot();
-//        addView(textViewParent);
-//      }
             this.textView =
                     (TextView)
                             LayoutInflater.from(getContext())
@@ -2642,131 +2252,6 @@ public class TabLayout extends HorizontalScrollView {
                                                   false);
             textViewParent.addView(textView);
         }
-
-//    @NonNull
-//    private FrameLayout createPreApi18BadgeAnchorRoot() {
-//      FrameLayout frameLayout = new FrameLayout(getContext());
-//      FrameLayout.LayoutParams layoutparams =
-//          new FrameLayout.LayoutParams(
-//              ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//      frameLayout.setLayoutParams(layoutparams);
-//      return frameLayout;
-//    }
-
-//    /**
-//     * Creates an instance of {@link BadgeDrawable} if none exists. Initializes (if needed) and
-//     * returns the associated instance of {@link BadgeDrawable}.
-//     *
-//     * @return an instance of BadgeDrawable associated with {@code Tab}.
-//     */
-//    @NonNull
-//    private BadgeDrawable getOrCreateBadge() {
-//      // Creates a new instance if one is not already initialized for this TabView.
-//      if (badgeDrawable == null) {
-//        badgeDrawable = BadgeDrawable.create(getContext());
-//      }
-//      tryUpdateBadgeAnchor();
-//      if (badgeDrawable == null) {
-//        throw new IllegalStateException("Unable to create badge");
-//      }
-//      return badgeDrawable;
-//    }
-//
-//    @Nullable
-//    private BadgeDrawable getBadge() {
-//      return badgeDrawable;
-//    }
-
-//    private void removeBadge() {
-//      if (badgeAnchorView != null) {
-//        tryRemoveBadgeFromAnchor();
-//      }
-//      badgeDrawable = null;
-//    }
-
-//        private void addOnLayoutChangeListener(@Nullable final View view) {
-//            if(view == null) {
-//                return;
-//            }
-//            view.addOnLayoutChangeListener(
-//                    new OnLayoutChangeListener() {
-//                        @Override
-//                        public void onLayoutChange(
-//                                View v,
-//                                int left,
-//                                int top,
-//                                int right,
-//                                int bottom,
-//                                int oldLeft,
-//                                int oldTop,
-//                                int oldRight,
-//                                int oldBottom) {
-//                            if(view.getVisibility() == VISIBLE) {
-////                tryUpdateBadgeDrawableBounds(view);
-//                            }
-//                        }
-//                    });
-//        }
-
-//    private void tryUpdateBadgeAnchor() {
-//      if (!hasBadgeDrawable()) {
-//        return;
-//      }
-//      if (customView != null) {
-//        // TODO(b/123406505): Support badging on custom tab views.
-//        tryRemoveBadgeFromAnchor();
-//      } else {
-//        if (iconView != null && tab != null && tab.getIcon() != null) {
-//          if (badgeAnchorView != iconView) {
-//            tryRemoveBadgeFromAnchor();
-//            // Anchor badge to icon.
-//            tryAttachBadgeToAnchor(iconView);
-//          } else {
-//            tryUpdateBadgeDrawableBounds(iconView);
-//          }
-//        } else if (textView != null
-//            && tab != null
-//            && tab.getTabLabelVisibility() == TAB_LABEL_VISIBILITY_LABELED) {
-//          if (badgeAnchorView != textView) {
-//            tryRemoveBadgeFromAnchor();
-//            // Anchor badge to label.
-//            tryAttachBadgeToAnchor(textView);
-//          } else {
-//            tryUpdateBadgeDrawableBounds(textView);
-//          }
-//        } else {
-//          tryRemoveBadgeFromAnchor();
-//        }
-//      }
-//    }
-
-//    private void tryAttachBadgeToAnchor(@Nullable View anchorView) {
-//      if (!hasBadgeDrawable()) {
-//        return;
-//      }
-//      if (anchorView != null) {
-//        // Avoid clipping a badge if it's displayed.
-//        setClipChildren(false);
-//        setClipToPadding(false);
-////        BadgeUtils.attachBadgeDrawable(
-////            badgeDrawable, anchorView, getCustomParentForBadge(anchorView));
-//        badgeAnchorView = anchorView;
-//      }
-//    }
-//
-//    private void tryRemoveBadgeFromAnchor() {
-//      if (!hasBadgeDrawable()) {
-//        return;
-//      }
-//      if (badgeAnchorView != null) {
-//        // Clip children / view to padding when no badge is displayed.
-//        setClipChildren(true);
-//        setClipToPadding(true);
-////        BadgeUtils.detachBadgeDrawable(
-////            badgeDrawable, badgeAnchorView, getCustomParentForBadge(badgeAnchorView));
-//        badgeAnchorView = null;
-//      }
-//    }
 
         final void updateOrientation() {
             setOrientation(inlineLabel ? HORIZONTAL : VERTICAL);
@@ -2841,25 +2326,6 @@ public class TabLayout extends HorizontalScrollView {
             final CharSequence contentDesc = tab != null ? tab.contentDesc : null;
             TooltipCompat.setTooltipText(this, hasText ? null : contentDesc);
         }
-
-//    private void tryUpdateBadgeDrawableBounds(@NonNull View anchor) {
-//      // Check that this view is the badge's current anchor view.
-//      if (hasBadgeDrawable() && anchor == badgeAnchorView) {
-//        BadgeUtils.setBadgeDrawableBounds(badgeDrawable, anchor, getCustomParentForBadge(anchor));
-//      }
-//    }
-//
-//    private boolean hasBadgeDrawable() {
-//      return badgeDrawable != null;
-//    }
-
-//    @Nullable
-//    private FrameLayout getCustomParentForBadge(@NonNull View anchor) {
-//      if (anchor != iconView && anchor != textView) {
-//        return null;
-//      }
-//      return BadgeUtils.USE_COMPAT_PARENT ? ((FrameLayout) anchor.getParent()) : null;
-//    }
 
         /**
          * Calculates the width of the TabView's content.
