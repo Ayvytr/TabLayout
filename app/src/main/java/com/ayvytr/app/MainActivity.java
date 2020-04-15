@@ -66,5 +66,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         binding.tabLayout.bindViewPager2(binding.vp2, titles);
+
+//        TabLayout.Tab tab = binding.tabLayout.newTab().setText("hahahah");
+//        binding.tabLayout.addTab(tab);
     }
 }

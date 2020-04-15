@@ -198,6 +198,7 @@ public class TabLayout extends HorizontalScrollView {
      */
     public static final int MODE_AUTO = 2;
     private FastOutSlowInInterpolator fastOutSlowInInterpolator = new FastOutSlowInInterpolator();
+    private int tabTextPaddingLeftRight;
 
     @IntDef(value = {MODE_SCROLLABLE, MODE_FIXED, MODE_AUTO})
     @Retention(RetentionPolicy.SOURCE)
@@ -481,6 +482,9 @@ public class TabLayout extends HorizontalScrollView {
             final int selected = a.getColor(R.styleable.TabLayout_tabSelectedTextColor, 0);
             tabTextColors = createColorStateList(tabTextColors.getDefaultColor(), selected);
         }
+
+        tabTextPaddingLeftRight = a
+                .getDimensionPixelSize(R.styleable.TabLayout_tabTextPaddingLeftRight, dp2px(5));
 
         textBoldMode = a.getInt(R.styleable.TabLayout_tabTextBoldMode, TEXT_BOLD_NO);
 
@@ -1654,7 +1658,7 @@ public class TabLayout extends HorizontalScrollView {
         @NonNull
         public TabView view;
 
-        public Tab() {
+        Tab() {
             // Private constructor
         }
 
@@ -2021,6 +2025,9 @@ public class TabLayout extends HorizontalScrollView {
                 } else {
                     textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 }
+
+                textView.setPadding(tabTextPaddingLeftRight, textView.getPaddingTop(),
+                        tabTextPaddingLeftRight, textView.getPaddingBottom());
             }
 
             if(iconView != null) {
@@ -2259,6 +2266,9 @@ public class TabLayout extends HorizontalScrollView {
                     textView.setVisibility(GONE);
                     textView.setText(null);
                 }
+
+                textView.setPadding(tabTextPaddingLeftRight, textView.getPaddingTop(),
+                        tabTextPaddingLeftRight, textView.getPaddingBottom());
             }
 
             if(iconView != null) {

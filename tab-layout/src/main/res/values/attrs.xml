@@ -15,11 +15,10 @@
             <enum name="selected" value="2" />
         </attr>
 
+        <attr name="tabTextPaddingLeftRight" format="dimension"/>
+
         <!-- Color of the indicator used to show the currently selected tab. -->
         <attr name="tabIndicatorColor" format="color" />
-        <!-- {@deprecated Instead, set the intrinsic size of the custom drawable provided to the
-             tabIndicator attribute in order to change the indicator height. For example, this can be
-             done by setting the <size> property in a <shape> resource.} -->
         <attr name="tabIndicatorHeight" format="dimension" />
         <attr name="tabIndicatorWidth" format="dimension" />
         <!-- Position in the Y axis from the starting edge that tabs should be positioned from. -->
@@ -64,9 +63,6 @@
         <attr name="tabMinWidth" format="dimension" />
         <!-- The maximum width for tabs. -->
         <attr name="tabMaxWidth" format="dimension" />
-        <!-- A reference to a TextAppearance style to be applied to tabs. -->
-        <!--        <attr name="tabTextAppearance" format="reference" />-->
-
         <!-- The preferred padding along the start edge of tabs. -->
         <attr name="tabPaddingStart" format="dimension" />
         <!-- The preferred padding along the top edge of tabs. -->
@@ -77,22 +73,5 @@
         <attr name="tabPaddingBottom" format="dimension" />
         <!-- The preferred padding along all edges of tabs. -->
         <attr name="tabPadding" format="dimension" />
-        <!-- Tint to apply to tab icons, if present. This can be a color state list or a color. -->
-        <!--        <attr name="tabIconTint" format="color" />-->
-        <!-- Blending mode to apply to tab icons. -->
-        <!--        <attr name="tabIconTintMode">-->
-        <!--            <enum name="src_over" value="3" />-->
-        <!--            <enum name="src_in" value="5" />-->
-        <!--            <enum name="src_atop" value="9" />-->
-        <!--            <enum name="multiply" value="14" />-->
-        <!--            <enum name="screen" value="15" />-->
-        <!--            <enum name="add" value="16" />-->
-        <!--        </attr>-->
-        <!-- Ripple color for the tabs. This may be a color state list, if the desired ripple color
-             should be stateful.-->
-        <!--        <attr name="tabRippleColor" format="color" />-->
-        <!-- Whether to use unbounded ripple effect for tabs, or if ripple should instead be bound to
-             tab item bounds. -->
-        <!--        <attr name="tabUnboundedRipple" format="boolean" />-->
     </declare-styleable>
 </resources>

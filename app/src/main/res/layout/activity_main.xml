@@ -25,7 +25,7 @@
 
     <com.ayvytr.tablayoutapp.TabLayout
         android:id="@+id/tab_layout"
-        app:tabMode="fixed"
+        app:tabMode="scrollable"
         app:tabTextColor="@color/black"
         app:tabSelectedTextColor="@color/red"
         app:tabTextSize="@dimen/_14sp"
@@ -37,6 +37,6 @@
         android:layout_width="match_parent"
         app:tabIndicator="@drawable/ic_indicator"
         app:tabItemBackground="@drawable/ic_tab_item_bg"
-        app:tabGravity="fill"
+        app:tabTextPaddingLeftRight="0dp"
         android:layout_height="60dp"/>
 </LinearLayout>
