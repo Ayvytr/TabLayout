@@ -765,7 +765,6 @@ public class TabLayout extends HorizontalScrollView {
         return tab;
     }
 
-    // TODO(b/76413401): remove this method and just create the final field after the widget migration
     protected Tab createTabFromPool() {
         Tab tab = tabPool.acquire();
         if(tab == null) {
@@ -774,7 +773,6 @@ public class TabLayout extends HorizontalScrollView {
         return tab;
     }
 
-    // TODO(b/76413401): remove this method and just create the final field after the widget migration
     protected boolean releaseFromTabPool(Tab tab) {
         return tabPool.release(tab);
     }
@@ -1625,7 +1623,6 @@ public class TabLayout extends HorizontalScrollView {
     /**
      * A tab in this layout. Instances can be created via {@link #newTab()}.
      */
-    // TODO(b/76413401): make class final after the widget migration is finished
     public static class Tab {
 
         /**
@@ -2454,7 +2451,6 @@ public class TabLayout extends HorizontalScrollView {
                 } else {
                     // If the tabs will wrap to be larger than the width minus gutters, we need
                     // to switch to GRAVITY_FILL.
-                    // TODO (b/129799806): This overrides the user TabGravity setting.
                     tabGravity = GRAVITY_FILL;
                     updateTabViews(false);
                     remeasure = true;
