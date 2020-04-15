@@ -391,7 +391,6 @@ public class TabLayout extends HorizontalScrollView {
     int mode;
     boolean inlineLabel;
     boolean tabIndicatorFullWidth;
-    boolean unboundedRipple;
 
     @Nullable
     private BaseOnTabSelectedListener selectedListener;
@@ -1345,18 +1344,6 @@ public class TabLayout extends HorizontalScrollView {
         }
     }
 
-//    @Override
-//    protected void onDraw(@NonNull Canvas canvas) {
-//        // Draw tab background layer for each tab item
-//        for(int i = 0; i < slidingTabIndicator.getChildCount(); i++) {
-//            View tabView = slidingTabIndicator.getChildAt(i);
-//            if(tabView instanceof TabView) {
-//                ((TabView) tabView).drawBackground(canvas);
-//            }
-//        }
-//
-//        super.onDraw(canvas);
-//    }
 
     private int dp2px(int dp) {
         float scale = getResources().getDisplayMetrics().density;
@@ -1665,14 +1652,11 @@ public class TabLayout extends HorizontalScrollView {
         private @LabelVisibility
         int labelVisibilityMode = TAB_LABEL_VISIBILITY_LABELED;
 
-        // TODO(b/76413401): make package private after the widget migration is finished
         @Nullable
         public TabLayout parent;
-        // TODO(b/76413401): make package private after the widget migration is finished
         @NonNull
         public TabView view;
 
-        // TODO(b/76413401): make package private constructor after the widget migration is finished
         public Tab() {
             // Private constructor
         }
@@ -2189,30 +2173,17 @@ public class TabLayout extends HorizontalScrollView {
                 if(this.iconView == null) {
                     inflateAndAddDefaultIconView();
                 }
-//                final Drawable icon =
-//                        (tab != null && tab.getIcon() != null)
-//                                ? DrawableCompat.wrap(tab.getIcon()).mutate()
-//                                : null;
-//                if(icon != null) {
-//                    DrawableCompat.setTintList(icon, tabIconTint);
-//                    if(tabIconTintMode != null) {
-//                        DrawableCompat.setTintMode(icon, tabIconTintMode);
-//                    }
-//                }
 
                 if(this.textView == null) {
                     inflateAndAddDefaultTextView();
                     defaultMaxLines = TextViewCompat.getMaxLines(this.textView);
                 }
-//        TextViewCompat.setTextAppearance(this.textView, tabTextAppearance);
                 if(tabTextColors != null) {
                     textView.setTextColor(tabTextColors);
                 }
                 updateTextAndIcon(this.textView, this.iconView);
 
                 setBackgroundResource(tabItemBackgroundResId);
-//                addOnLayoutChangeListener(iconView);
-//                addOnLayoutChangeListener(textView);
             } else {
                 // Else, we'll see if there is a TextView or ImageView present and update them
                 if(customTextView != null || customIconView != null) {
@@ -2231,10 +2202,6 @@ public class TabLayout extends HorizontalScrollView {
 
         private void inflateAndAddDefaultIconView() {
             ViewGroup iconViewParent = this;
-//      if (BadgeUtils.USE_COMPAT_PARENT) {
-//        iconViewParent = createPreApi18BadgeAnchorRoot();
-//        addView(iconViewParent, 0);
-//      }
             this.iconView =
                     (ImageView)
                             LayoutInflater.from(getContext())
