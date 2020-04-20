@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item type="id" name="tvText"/>
+    <item type="id" name="ivIcon"/>
 
     <declare-styleable name="TabLayout">
         <!-- The default text color to be applied to tabs. -->
@@ -73,5 +75,7 @@
         <attr name="tabPaddingBottom" format="dimension" />
         <!-- The preferred padding along all edges of tabs. -->
         <attr name="tabPadding" format="dimension" />
+
+        <attr name="tabCustomLayout" format="reference"/>
     </declare-styleable>
 </resources>

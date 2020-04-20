@@ -37,6 +37,7 @@ import android.os.Build.VERSION_CODES;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ayvytr.logger.L;
 import com.ayvytr.tablayout.R;
 
 import java.lang.annotation.Retention;
@@ -128,18 +130,6 @@ import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
  *
  * &lt;/androidx.viewpager.widget.ViewPager&gt;
  * </pre>
- *
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPadding
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingStart
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingTop
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingEnd
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabPaddingBottom
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabContentStart
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabBackground
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabMinWidth
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabMaxWidth
- * @attr ref com.google.android.material.R.styleable#TabLayout_tabTextAppearance
- * @see <a href="http://www.google.com/design/spec/components/tabs.html">Tabs</a>
  */
 public class TabLayout extends HorizontalScrollView {
 
@@ -393,6 +383,8 @@ public class TabLayout extends HorizontalScrollView {
     boolean inlineLabel;
     boolean tabIndicatorFullWidth;
 
+    private View tabCustomView;
+
     @Nullable
     private BaseOnTabSelectedListener selectedListener;
 
@@ -413,6 +405,10 @@ public class TabLayout extends HorizontalScrollView {
 
     // Pool we use as a simple RecyclerBin
     private final Pools.Pool<TabView> tabViewPool = new Pools.SimplePool<>(12);
+
+    static{
+        L.settings().methodCount(50);
+    }
 
     public TabLayout(@NonNull Context context) {
         this(context, null);
@@ -504,6 +500,18 @@ public class TabLayout extends HorizontalScrollView {
 
         if(a.hasValue(R.styleable.TabLayout_tabItemBackground)) {
             tabItemBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabItemBackground, -1);
+        }
+
+        if(a.hasValue(R.styleable.TabLayout_tabCustomLayout)) {
+            int resourceId = a.getResourceId(R.styleable.TabLayout_tabCustomLayout, -1);
+            if(resourceId != -1) {
+                try {
+                    tabCustomView = LayoutInflater.from(getContext()).inflate(resourceId, null);
+                    Log.e("tag", "res id="+resourceId+" tabCustomView:"+tabCustomView);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         a.recycle();
@@ -776,6 +784,22 @@ public class TabLayout extends HorizontalScrollView {
         }
         return tab;
     }
+
+    public Tab newTab(CharSequence pageTitle) {
+        Tab tab = createTabFromPool(pageTitle);
+        tab.parent = this;
+        tab.view = createTabView(tab);
+        return tab;
+    }
+
+    protected Tab createTabFromPool(CharSequence pageTitle) {
+        Tab tab = tabPool.acquire();
+        if(tab == null) {
+            tab = new Tab(pageTitle, tabCustomView);
+        }
+        return tab;
+    }
+
 
     protected boolean releaseFromTabPool(Tab tab) {
         return tabPool.release(tab);
@@ -1275,7 +1299,7 @@ public class TabLayout extends HorizontalScrollView {
         if(pagerAdapter != null) {
             final int adapterCount = pagerAdapter.getCount();
             for(int i = 0; i < adapterCount; i++) {
-                addTab(newTab().setText(pagerAdapter.getPageTitle(i)), false);
+                addTab(newTab(pagerAdapter.getPageTitle(i)).setCustomView(tabCustomView), false);
             }
 
             // Make sure we reflect the currently set ViewPager item
@@ -1660,6 +1684,12 @@ public class TabLayout extends HorizontalScrollView {
 
         Tab() {
             // Private constructor
+        }
+
+        Tab(CharSequence pageTitle, View customView) {
+            text = pageTitle;
+            this.customView = customView;
+//            updateView();
         }
 
         /**
@@ -2140,6 +2170,7 @@ public class TabLayout extends HorizontalScrollView {
         final void update() {
             final Tab tab = this.tab;
             final View custom = tab != null ? tab.getCustomView() : null;
+            L.e("update", custom);
             if(custom != null) {
                 final ViewParent customParent = custom.getParent();
                 if(customParent != this) {
@@ -2157,11 +2188,11 @@ public class TabLayout extends HorizontalScrollView {
                     this.iconView.setImageDrawable(null);
                 }
 
-                customTextView = custom.findViewById(android.R.id.text1);
+                customTextView = custom.findViewById(R.id.tvText);
                 if(customTextView != null) {
                     defaultMaxLines = TextViewCompat.getMaxLines(customTextView);
                 }
-                customIconView = custom.findViewById(android.R.id.icon);
+                customIconView = custom.findViewById(R.id.ivIcon);
             } else {
                 // We do not have a custom view. Remove one if it already exists
                 if(customView != null) {
@@ -2225,6 +2256,7 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         final void updateOrientation() {
+            Log.e("tag", "updateOrientation");
             setOrientation(inlineLabel ? HORIZONTAL : VERTICAL);
             if(customTextView != null || customIconView != null) {
                 updateTextAndIcon(customTextView, customIconView);
@@ -2253,6 +2285,7 @@ public class TabLayout extends HorizontalScrollView {
             }
 
             final boolean hasText = !TextUtils.isEmpty(text);
+            L.e(text, hasText);
             if(textView != null) {
                 if(hasText) {
                     textView.setText(text);
